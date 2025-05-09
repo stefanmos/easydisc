@@ -42,12 +42,12 @@ export function HeroSection() {
             <div className="relative mx-auto max-w-[500px]">
               <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/10 rounded-3xl transform rotate-3"></div>
               <img
-                src="/placeholder.svg?height=600&width=600"
+                src="/illustration.jpg?height=600&width=600"
                 alt="License disk renewal made easy"
                 className="relative z-10 rounded-2xl shadow-2xl"
               />
               <div className="absolute -bottom-6 -right-6 bg-primary text-primary-foreground p-4 rounded-xl shadow-lg z-20">
-                <p className="font-bold">Renew in 60 seconds</p>
+                <p className="font-bold">Renew in 3 minutes</p>
                 <p className="text-sm">No queues. No hassle.</p>
               </div>
             </div>

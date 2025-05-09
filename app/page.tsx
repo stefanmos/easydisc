@@ -47,7 +47,9 @@ export default function Home() {
             <Button variant="outline" className="hidden md:flex">
               Request a Business Quote
             </Button>
-            <Button>Renew Now</Button>
+            <Link href="https://tally.so/r/mDbMQ5" target="_blank" rel="noopener noreferrer">
+              <Button>Renew Now</Button>
+            </Link>
           </div>
         </div>
       </header>
@@ -204,13 +206,16 @@ export default function Home() {
           <div className="container text-center">
             <h2 className="text-3xl font-bold mb-4">Don't Waste Another Minute in Line</h2>
             <p className="text-xl mb-8 max-w-2xl mx-auto">
-              Join thousands of South Africans already using Easydisc. Start your renewal in under 60 seconds.
+              Join thousands of South Africans already using Easydisc. Start your renewal in under 3 minutes.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="secondary" className="text-lg">
-                Renew Now
-              </Button>
-              <Button size="lg" variant="outline" className="text-lg">
+
+              <Link href="https://tally.so/r/mDbMQ5" target="_blank" rel="noopener noreferrer">
+                <Button size="lg" variant="secondary" className="text-lg">
+                  Renew Now
+                </Button>
+              </Link>
+              <Button size="lg" variant="outline" className="text-lg bg-transparent border-white text-white">
                 Request a Business Quote
               </Button>
             </div>
@@ -273,7 +278,7 @@ export default function Home() {
               <ul className="space-y-2">
                 <li className="text-muted-foreground">Email: info@easydisc.co.za</li>
                 <li className="text-muted-foreground">Phone: +27 (0) 12 345 6789</li>
-                <li className="text-muted-foreground">Address: Cape Town, South Africa</li>
+                <li className="text-muted-foreground">Address: 1 Whiteley Rd, Melrose, Johannesburg, 2076, South Africa</li>
               </ul>
             </div>
           </div>
