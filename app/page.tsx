@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import {
   Check,
@@ -26,8 +27,14 @@ export default function Home() {
       <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
-            <Car className="h-6 w-6" />
-            <span className="text-xl font-bold">Easydisc</span>
+            <Image
+              src="/logo.svg"
+              alt="Easydisc Logo"
+              width={0}
+              height={30}
+              style={{ height: 30, width: 'auto' }}
+              priority
+            />
           </div>
           <nav className="hidden md:flex items-center gap-6">
             <Link href="#features" className="text-sm font-medium hover:text-primary transition-colors">
@@ -44,9 +51,11 @@ export default function Home() {
             </Link>
           </nav>
           <div className="flex items-center gap-4">
-            <Button variant="outline" className="hidden md:flex">
-              Request a Business Quote
-            </Button>
+            <Link href="/business">
+              <Button variant="outline" className="hidden md:flex">
+                Request a Business Quote
+              </Button>
+            </Link>
             <Link href="https://tally.so/r/mDbMQ5" target="_blank" rel="noopener noreferrer">
               <Button>Renew Now</Button>
             </Link>
@@ -228,8 +237,14 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <Car className="h-6 w-6" />
-                <span className="text-xl font-bold">Easydisc</span>
+                <Image
+                  src="/logo.svg"
+                  alt="Easydisc Logo"
+                  width={0}
+                  height={30}
+                  style={{ height: 30, width: 'auto' }}
+                  priority
+                />
               </div>
               <p className="text-muted-foreground">Vehicle License Disk Renewal Made Effortless</p>
             </div>
@@ -264,11 +279,6 @@ export default function Home() {
                 <li>
                   <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
                     Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                    Cookie Policy
                   </Link>
                 </li>
               </ul>
