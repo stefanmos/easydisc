@@ -1,58 +1,40 @@
+'use client'
+
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import React from "react"
-import { revalidatePath } from "next/cache"
-
-async function sendEmail(formData: FormData) {
-  'use server'
-  
-  const name = formData.get('name')
-  const company = formData.get('company')
-  const email = formData.get('email')
-  const phone = formData.get('phone')
-  const fleetSize = formData.get('fleetSize')
-  const message = formData.get('message')
-
-  const emailContent = `
-    New Business Enquiry from ${name}
-    
-    Company: ${company}
-    Email: ${email}
-    Phone: ${phone}
-    Fleet Size: ${fleetSize}
-    
-    Message:
-    ${message}
-  `
-
-  try {
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: 'Easydisc Business Enquiries <noreply@easydisc.co.za>',
-        to: 'iamstefanmos@gmail.com',
-        subject: `New Business Enquiry from ${name}`,
-        text: emailContent,
-      }),
-    })
-
-    if (!response.ok) {
-      throw new Error('Failed to send email')
-    }
-
-    revalidatePath('/business')
-  } catch (error) {
-    console.error('Error sending email:', error)
-    throw new Error('Failed to send email')
-  }
-}
+import React, { useState } from "react"
+import { useRouter } from "next/navigation"
 
 export default function BusinessEnquiry() {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const router = useRouter()
+
+  async function handleSubmit(formData: FormData) {
+    setIsSubmitting(true)
+    setSubmitStatus('idle')
+    
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to send email')
+      }
+
+      setSubmitStatus('success')
+      router.refresh()
+    } catch (error) {
+      console.error('Error sending email:', error)
+      setSubmitStatus('error')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -101,39 +83,58 @@ export default function BusinessEnquiry() {
           <p className="text-muted-foreground mb-8 text-center">
             Fill out the form below and our team will get back to you with a tailored quote for your business or fleet.
           </p>
-          <form action={sendEmail} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block mb-1 font-medium">Name</label>
-                <input name="name" type="text" className="w-full border rounded px-3 py-2" required />
+          {submitStatus === 'success' ? (
+            <div className="text-center p-4 bg-green-50 text-green-700 rounded-lg">
+              <p className="font-medium">Thank you for your enquiry!</p>
+              <p>We'll get back to you shortly.</p>
+            </div>
+          ) : (
+            <form action={handleSubmit} className="space-y-6">
+              {submitStatus === 'error' && (
+                <div className="p-4 bg-red-50 text-red-700 rounded-lg">
+                  <p>Sorry, there was an error sending your enquiry. Please try again.</p>
+                </div>
+              )}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block mb-1 font-medium">Name</label>
+                  <input name="name" type="text" className="w-full border rounded px-3 py-2" required />
+                </div>
+                <div>
+                  <label className="block mb-1 font-medium">Company</label>
+                  <input name="company" type="text" className="w-full border rounded px-3 py-2" required />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block mb-1 font-medium">Email</label>
+                  <input name="email" type="email" className="w-full border rounded px-3 py-2" required />
+                </div>
+                <div>
+                  <label className="block mb-1 font-medium">Phone</label>
+                  <input name="phone" type="tel" className="w-full border rounded px-3 py-2" required />
+                </div>
               </div>
               <div>
-                <label className="block mb-1 font-medium">Company</label>
-                <input name="company" type="text" className="w-full border rounded px-3 py-2" required />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block mb-1 font-medium">Email</label>
-                <input name="email" type="email" className="w-full border rounded px-3 py-2" required />
+                <label className="block mb-1 font-medium">Fleet Size</label>
+                <input name="fleetSize" type="number" min="1" className="w-full border rounded px-3 py-2" required />
               </div>
               <div>
-                <label className="block mb-1 font-medium">Phone</label>
-                <input name="phone" type="tel" className="w-full border rounded px-3 py-2" required />
+                <label className="block mb-1 font-medium">Message</label>
+                <textarea name="message" className="w-full border rounded px-3 py-2" rows={4} required />
               </div>
-            </div>
-            <div>
-              <label className="block mb-1 font-medium">Fleet Size</label>
-              <input name="fleetSize" type="number" min="1" className="w-full border rounded px-3 py-2" required />
-            </div>
-            <div>
-              <label className="block mb-1 font-medium">Message</label>
-              <textarea name="message" className="w-full border rounded px-3 py-2" rows={4} required />
-            </div>
-            <div className="text-center">
-              <Button type="submit" size="lg" className="text-lg">Submit Enquiry</Button>
-            </div>
-          </form>
+              <div className="text-center">
+                <Button 
+                  type="submit" 
+                  size="lg" 
+                  className="text-lg"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Sending...' : 'Submit Enquiry'}
+                </Button>
+              </div>
+            </form>
+          )}
         </div>
       </main>
 
